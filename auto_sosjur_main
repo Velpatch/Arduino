@@ -1,0 +1,55 @@
+#include "mov.h"
+#include "sight.h"
+//#include <Servo.h>
+int state =  0;
+/*servo setting:
+ * 90 to look forward
+ * 180 to look left
+ * 0 to look right
+ */
+
+//Servo servoPin;
+
+mov initial;
+sight initial2;
+void setup() 
+{
+  Serial.begin(9600);
+  //servoPin.attach(A0);
+}
+void loop() 
+{
+  Serial.print(state);
+  Serial.println("state");
+  initial2.scan(12);
+  //servoPin.write(state);
+  //initial.forward(100,100,100,200);
+  if(verify==0 && state==0)
+  {
+    initial.forward(75,80,100,100);
+  }
+  else if(verify==1 && state == 0)
+  {
+    initial.idle();
+    delay(500);
+    initial.turnLeft(100,100);
+    delay(300);
+    state=state+1;
+    if(verify==0 && state <=1)
+    {
+      verify=0;
+    }
+  }
+  else if(verify==1 && state <= 1)
+  {
+    initial.idle();
+    delay(500);
+    initial.turnRight(100,100);
+    delay(650);
+    state=0;
+  }
+  else
+  {
+    initial.idle();
+  }
+}
