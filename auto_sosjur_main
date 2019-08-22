@@ -1,55 +1,89 @@
-#include "mov.h"
-#include "sight.h"
-//#include <Servo.h>
-int state =  0;
-/*servo setting:
- * 90 to look forward
- * 180 to look left
- * 0 to look right
- */
-
-//Servo servoPin;
+#include "movement.h"
+#include<NewPing.h>
+#include <Servo.h>
 
 mov initial;
-sight initial2;
+
+NewPing sonar(12, 13, 200);
+Servo myServo;
+int distance=100;
+
 void setup() 
 {
+  myServo.attach(A0);
+  myServo.write(90);
   Serial.begin(9600);
-  //servoPin.attach(A0);
+  delay(2000);
+  distance = readCm();
+  delay(100);
+  distance = readCm();
+  delay(100);
+  distance = readCm();
+  delay(100);
+  distance = readCm();
+  delay(100);
 }
+
 void loop() 
 {
-  Serial.print(state);
-  Serial.println("state");
-  initial2.scan(12);
-  //servoPin.write(state);
-  //initial.forward(100,100,100,200);
-  if(verify==0 && state==0)
-  {
-    initial.forward(75,80,100,100);
-  }
-  else if(verify==1 && state == 0)
+  int distanceR = 0;
+  int distanceL = 0;
+  Serial.println(distance);
+  if (distance <= 15)
   {
     initial.idle();
-    delay(500);
-    initial.turnLeft(100,100);
-    delay(300);
-    state=state+1;
-    if(verify==0 && state <=1)
+    delay(1000); 
+    distanceR = lookRight();
+    delay(200);
+    distanceL = lookLeft();
+    delay(200);
+    if(distanceR <= distanceL)
     {
-      verify=0;
+      initial.idle();
+      initial.turnLeft();
     }
-  }
-  else if(verify==1 && state <= 1)
-  {
-    initial.idle();
-    delay(500);
-    initial.turnRight(100,100);
-    delay(650);
-    state=0;
+    else
+    {
+      initial.idle();
+      initial.turnRight();
+    }
   }
   else
   {
-    initial.idle();
+    initial.forward(70, 90);
   }
+  distance=readCm();
 }
+
+int lookRight()
+{
+    myServo.write(0); 
+    delay(500);
+    int distance = readCm();
+    delay(100);
+    myServo.write(90); 
+    return distance;
+}
+
+int lookLeft()
+{
+    myServo.write(180); 
+    delay(500);
+    int distance = readCm();
+    delay(100);
+    myServo.write(90); 
+    return distance;
+    delay(100);
+}
+
+
+int readCm()
+{
+  int cm = sonar.ping_cm();
+  if(cm==0)
+  {
+    cm = 250;
+  }
+  return cm;
+}
+
