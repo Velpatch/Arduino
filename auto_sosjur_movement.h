@@ -7,14 +7,6 @@
 #define in4 A4
 #define enB 5
 
-/*pin untuk motor driver2*/
-#define enA2 11
-#define in12 4
-#define in22 3
-#define in32 2
-#define in42 1
-#define enB2 10
-
 class mov
 {
   public:
@@ -22,10 +14,11 @@ class mov
   mov();
 
   //fungsi untuk gerakan
-  void forward(int x, int y, int z, int i);
+  //parameter untuk mengatur pwm
+  void forward(int x, int y);
   void backward(int x, int y);
-  void turnLeft(int x, int y);
-  void turnRight(int x, int y);
+  void turnLeft();
+  void turnRight();
   void idle();
 };
 
@@ -39,7 +32,7 @@ mov::mov()
   pinMode(enB, OUTPUT);
 }
 
-void mov::forward(int x, int y, int z, int i)
+void mov::forward(int x, int y)
 {
     /*MD1*/
     //motor 1
@@ -50,16 +43,6 @@ void mov::forward(int x, int y, int z, int i)
     analogWrite(enB, y);
     digitalWrite(in3, HIGH);
     digitalWrite(in4, LOW);
-
-    /*MD2*/
-    //motor 1
-    analogWrite(enA2, z);
-    digitalWrite(in12, HIGH);
-    digitalWrite(in22, LOW);
-    //motor 2
-    analogWrite(enB2, i);
-    digitalWrite(in32, HIGH);
-    digitalWrite(in42, LOW);
 }
 void mov::backward(int x, int y)
 {
@@ -84,38 +67,47 @@ void mov::idle()
     analogWrite(enB,0);
     digitalWrite(in3, LOW);
     digitalWrite(in4, LOW);
-
-    /*MD2*/
-    //motor 1
-    analogWrite(enA2, 0);
-    digitalWrite(in12, LOW);
-    digitalWrite(in22, LOW);
-   //motor 2
-    analogWrite(enB2,0);
-    digitalWrite(in32, LOW);
-    digitalWrite(in42, LOW);
 }
 
-void mov::turnLeft(int x, int y)
+void mov::turnLeft()
 {
     //motor 1
-    analogWrite(enA, x);
+    analogWrite(enA, 100);
     digitalWrite(in1, HIGH);
     digitalWrite(in2, LOW);
     //motor 2
-    analogWrite(enB, y);
+    analogWrite(enB, 100);
     digitalWrite(in3, LOW);
     digitalWrite(in4, HIGH);
+    delay(315);
+    //motor 1
+    analogWrite(enA, 70);
+    digitalWrite(in1, HIGH);
+    digitalWrite(in2, LOW);
+    //motor 2
+    analogWrite(enB, 90);
+    digitalWrite(in3, HIGH);
+    digitalWrite(in4, LOW);
+    
 }
 
-void mov::turnRight(int x, int y)
+void mov::turnRight()
 {
     //motor 1
-    analogWrite(enA, x);
+    analogWrite(enA, 100);
     digitalWrite(in1, LOW);
     digitalWrite(in2, HIGH);
     //motor 2
-    analogWrite(enB, y);
+    analogWrite(enB, 100);
+    digitalWrite(in3, HIGH);
+    digitalWrite(in4, LOW);
+    delay(350);
+    //motor 1
+    analogWrite(enA, 70);
+    digitalWrite(in1, HIGH);
+    digitalWrite(in2, LOW);
+    //motor 2
+    analogWrite(enB, 90);
     digitalWrite(in3, HIGH);
     digitalWrite(in4, LOW);
 }
